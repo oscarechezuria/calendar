@@ -9,24 +9,24 @@ import Header from './components/Header';
 dayjs.locale('es')
 
 
+
+
 const DayView = () => {
     // eslint-disable-next-line no-unused-vars
     const [dayOption, setDayOption] = useState(4)
 
     const {selectedDate } = useContext(CalendarContext)
     
-    const [data, setData] = useState([])
-    // eslint-disable-next-line no-unused-vars
+    const [matrixDay, setMatrixDay] = useState([])
 
     const [currentDayEvents, setCurrentDayEvents] = useState([])
-    //console.log(data)
-
+    
 
     useEffect(() => {
-        solucion(selectedDate, dayOption)
+        getArrayForDay(selectedDate, dayOption)
     },[selectedDate, dayOption])
 
-    const solucion = (selectedDate, dayOption) => {
+    const getArrayForDay = (selectedDate, dayOption) => {
         
         const month = dayjs(selectedDate).month();
         const year = dayjs(selectedDate).year();
@@ -34,7 +34,7 @@ const DayView = () => {
         const daysMatrix = new Array(dayOption).fill([]).map((_id, idx) => {
                 return({
                     date: dayjs(new Date(year, month, day + idx)),
-                    datos: [{date: dayjs(new Date(year, month, day + idx)), hora: "12 AM" },
+                    data: [{date: dayjs(new Date(year, month, day + idx)), hora: "12 AM" },
                             {date: dayjs(new Date(year, month, day + idx)), hora: "1 AM" },
                             {date: dayjs(new Date(year, month, day + idx)), hora: "2 AM" },
                             {date: dayjs(new Date(year, month, day + idx)), hora: "3 AM" },
@@ -62,7 +62,7 @@ const DayView = () => {
                 });
         }
         );
-        setData(daysMatrix)
+        setMatrixDay(daysMatrix)
         return daysMatrix
         }
 
@@ -162,34 +162,14 @@ useEffect(() => {
         
         
     ])
-    console.log("aqui")
     }, 1000);
 
 },[])
 
-    //const [searchParams] = useSearchParams()
-
-    //const dateParams = searchParams.get("date")
-
-
-/*
-    useEffect(() => {
-        let isValidDate = dayjs(dateParams).isValid()
-        if(isValidDate && dateParams){
-            let d = new Date(dateParams)
-            setSelectedDate(d)
-        } else {
-            // let now = dayjs()
-            // let currentDate = date || now.date()
-            // setSelectedDate(dayjs(new Date(now.year(), monthIndex, currentDate)))
-        }
-    }, [ dateParams])
-*/
 
     function isCurrentDate(item){
         const parseDate = new Date(item)
         return (selectedDate?.toDateString() === parseDate.toDateString())
-        //return (currentDate?.toDateString() === selectedDate?.toDateString())
     }
 
     const handleHora = (hour) => {
@@ -204,18 +184,18 @@ useEffect(() => {
         }
     }
     return (
-        <div className='p-4'>
+        <div className='p-4 md:p-8'>
+
             <Header/>
 
-            <div className="grid grid-cols-4 w-full m-3 pl-6 pr-2 py-4">
+            <div className="grid grid-cols-4 w-full pl-10 pr-2 py-4" >
                 {
-                    data.map(((item, idx) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <div className="relative top-0 flex flex-col items-center ">
-                        <span className={`font-normal text-sm text-primary`}>
+                    matrixDay.map(((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center gap-1">
+                        <span className={`font-normal text-sm mt-1 ${isCurrentDate(item.date) ? "text-blue-600" : "text-gray-700 "}`}>
                             {dayjs(selectedDate).add(idx, "day").locale("es").format("ddd").toLocaleUpperCase()}
                         </span>
-                        <h4 className={`font-medium text-md p-2 md:text-xl ${isCurrentDate(item.date) ? "p-6 text-white rounded-full day-circle bg-blue-400" : ""} `}>
+                        <h4 className={`flex justify-center items-center font-medium text-xl mb-1 p-4 h-14 md:text-2xl ${isCurrentDate(item.date) ? "text-white rounded-full day-circle bg-blue-600" : ""} `}>
                             { dayjs(selectedDate).add(idx, "day").locale("es").format("DD")}
                         </h4>
                     </div>
@@ -223,12 +203,11 @@ useEffect(() => {
                 }
             </div>
 
-            <div className="flex w-full ">
+            <div className="flex w-full overflow-auto h-10">
                 <div>
                     {
                         Array.from({length: 24}).map((item, hour) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <div>
+                            <div key={hour}>
                                 <div className='grid grid-cols-1 mb-10 mr-1 text-xs w-10 text-end'> 
                                     {handleHora(hour)}
                                 </div>
@@ -238,17 +217,16 @@ useEffect(() => {
                 </div>
                 <div className={`grid grid-cols-4 w-full `}>
                     { 
-                        // eslint-disable-next-line no-unused-vars
-                        data.map((item, index) => (
+                        matrixDay.map((item, index) => (
                             <div key={index} className="cursor-pointer flex flex-col">
                                     {
-                                                item.datos.map(ev => (
-                                                    <div className='flex justify-center items-start flex-col h-14 border gap-1 p-2'>
+                                                item.data.map((itm, idx) => (
+                                                    <div key={idx} className='flex justify-center items-start flex-col h-14 border gap-1 p-2'>
                                                         {
                                                                 currentDayEvents.map(item => {
-                                                                    const parseHour = new Date(ev.date).toDateString()
+                                                                    const parseHour = new Date(itm.date).toDateString()
                                                                     return(
-                                                                    ev.hora === item.hora && parseHour === item.start ? (
+                                                                    itm.hora === item.hora && parseHour === item.start ? (
                                                                         <div 
                                                                             className={`flex items-center w-full truncate px-1 rounded-md text-xs md:text-sm`} 
                                                                             style={{backgroundColor: item.label}}
@@ -268,7 +246,6 @@ useEffect(() => {
                         ))
                     }
                 </div>
-                    
             </div>
         </div>
     );

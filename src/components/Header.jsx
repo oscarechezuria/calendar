@@ -81,55 +81,55 @@ export default function Header() {
     let view = "day" || "month";
 
     return (
-        <header className="flex justify-center py-3 flex-wrap px-3 items-center border-b md:justify-between">
+        <header className="flex justify-start px-3 py-2 flex-wrap items-center border-b">
 
-            <div className="flex items-center gap-x-1">
-                <div className="col-span-10 flex items-center ml-2 md:ml-6 lg:ml-10 gap-x-1 md:gap-x-4">
-                    <button className="btn" onClick={resetDate}>Hoy</button>
+            <div className="flex items-center">
+                <div className="col-span-10 flex items-center font-semibold ml-2 md:ml-6 lg:ml-10 gap-x-2 md:gap-x-8">
+                    <button className="font-semibold focus:outline-none bg-gray-100 text-black text-base md:text-lg " onClick={resetDate}>Hoy</button>
 
                     <div className="flex items-center gap-x-2">
-                        <li className="btn btn-circle list-none text-2xl" onClick={jumpPrevMonth}>
-                            <BiChevronLeft />
+                        <li className="btn btn-circle list-none text-2xl cursor-pointer" onClick={jumpPrevMonth}>
+                            <BiChevronLeft className='font-semibold' />
                         </li>
-                        <li className="btn btn-circle list-none text-2xl" onClick={jumpNextMonth}>
+                        <li className="btn btn-circle list-none text-2xl cursor-pointer" onClick={jumpNextMonth}>
                             <BiChevronRight />
                         </li>
                     </div>
 
+                    <div>
+                        <h4 className="font-semibold text-black text-lg md:text-2xl">
+                            {dayjs(new Date(selectedDate)).format(
+                                view === "day" ? "MMMM YYYY" : "MMMM YYYY"
+                            )}
+                        </h4>
+                    </div>
                 </div>
-            </div>
-
-            <div className="flex items-center gap-x-2 md:gap-x-8 col-span-6">
-
-                {/***** selected date *****/}
-                <div>
-                    <h4 className="font-semibold whitespace-nowrap text-xs md:text-base">
-                        {dayjs(new Date(selectedDate)).format(
-                            view === "day" ? "MMMM DD YYYY" : "MMMM YYYY"
-                        )}
-                    </h4>
-                </div>
-                {/*
-                <Select
-                    withBg={true}
-                    value={calendarView}
-                    dropdownClass=""
-                    onChange={handleChangeCalendarView}
-                    renderPlaceholderValue={(v) => (
-                        <span>{v.toUpperCase()}</span>
-                    )}
-                    render={(click) => (
-                        <div>
-                            <li onClick={() => click("day")} className="mui-select-item">Día</li>
-                            <li onClick={() => click("month")} className="mui-select-item">4 Día</li>
-                            <li onClick={() => click("month")} className="mui-select-item">Semanal</li>
-                        </div>
-                    )}>
-                </Select>
-                */}
             </div>
         </header>
     );
 }
 
 
+
+    
+                    {/*
+                <div className="flex items-center gap-x-2 md:gap-x-8 col-span-6">
+    
+                    <Select
+                        withBg={true}
+                        value={calendarView}
+                        dropdownClass=""
+                        onChange={handleChangeCalendarView}
+                        renderPlaceholderValue={(v) => (
+                            <span>{v.toUpperCase()}</span>
+                        )}
+                        render={(click) => (
+                            <div>
+                                <li onClick={() => click("day")} className="mui-select-item">Día</li>
+                                <li onClick={() => click("month")} className="mui-select-item">4 Día</li>
+                                <li onClick={() => click("month")} className="mui-select-item">Semanal</li>
+                            </div>
+                        )}>
+                    </Select>
+                </div>
+                    */}
